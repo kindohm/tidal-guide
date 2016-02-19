@@ -70,10 +70,15 @@ Square braces allow several events to be played inside of a single event.
 Practically, this means you can create denser sub-divisions of samples:
 
 `d1 $ sound "bd [sd sd]"`
+
 `d1 $ sound "bd [sd sd sd]"`
+
 `d1 $ sound "bd [sd sd sd sd]"`
+
 `d1 $ sound "[bd bd] [sd sd sd sd]"`
+
 `d1 $ sound "[bd bd bd] [sd sd]"`
+
 `d1 $ sound "[bd bd bd bd] [sd]"`
 
 You can even nest groups inside groups to create very dense and complex
