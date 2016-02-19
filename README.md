@@ -5,7 +5,9 @@ ready to get to business and really learn Tidal. This guide is for beginners
 who are learning Tidal. It will help you get started with simple patterns
 and walk you through all the way to complex compositions.
 
-## TOC
+> NOTE: please _play_ with the code as you read. Run your own experiments
+> by making slight modification to these samples!
+
 
 ## Creating Rhythmic Sequences
 
@@ -51,11 +53,11 @@ always stays the same unless you modify it with `cps` or `bps`.
 All of the samples inside of a pattern get squashed into a single cycle.
 The patterns below all loop over the same amount of time:
 
-`d1 $ sound "bd sd"`
-
-`d1 $ sound "bd sd hh cp mt arpy drum"`
-
-`d1 $ sound "bd sd hh cp mt arpy drum odx bd arpy bass2 feel future"`
+```
+d1 $ sound "bd sd"
+d1 $ sound "bd sd hh cp mt arpy drum"
+d1 $ sound "bd sd hh cp mt arpy drum odx bd arpy bass2 feel future"
+```
 
 No matter how many samples you put in a pattern, they will always be
 distributed evenly within a single cycle.
@@ -69,17 +71,14 @@ Use Tidal's _square braces_ syntax to create a pattern grouping:
 Square braces allow several events to be played inside of a single event.
 Practically, this means you can create denser sub-divisions of samples:
 
-`d1 $ sound "bd [sd sd]"`
-
-`d1 $ sound "bd [sd sd sd]"`
-
-`d1 $ sound "bd [sd sd sd sd]"`
-
-`d1 $ sound "[bd bd] [sd sd sd sd]"`
-
-`d1 $ sound "[bd bd bd] [sd sd]"`
-
-`d1 $ sound "[bd bd bd bd] [sd]"`
+```
+d1 $ sound "bd [sd sd]"
+d1 $ sound "bd [sd sd sd]"
+d1 $ sound "bd [sd sd sd sd]"
+d1 $ sound "[bd bd] [sd sd sd sd]"
+d1 $ sound "[bd bd bd] [sd sd]"
+d1 $ sound "[bd bd bd bd] [sd]"
+```
 
 You can even nest groups inside groups to create very dense and complex
 patterns:
