@@ -34,6 +34,10 @@ so :3 gives you the fourth sound in the folder):
 
 `d1 $ sound "bd:3"`
 
+If you specify a number greater than the number of samples in a folder, then
+Tidal just "wraps" around back to the first sample again (e.g. in a folder
+with five samples, "bd:5" would play "bd:0").
+
 ### Sequences From Multiple Samples
 
 Putting things in quotes actually defines a sequence. For example, the following
@@ -268,6 +272,59 @@ d1 $ sound "bd*4" # gain (every 3 (rev) $ "1 0.8 0.5 0.7")
 > Like with the `sound` example earlier, you must use parenthesis after `gain`
 > in order to specify a function on the `gain` pattern.
 
+### Modifying effect values
+
+The `#` operator is just a shortcut to a longer form of operator called `|=|`.
+The `|=|` operator means something special about combining patterns, but we'll
+cover that later. All you need to know right now is that `|=|` will set an
+effect's value equal to a pattern.
+
+However, you can also change an effect value on the other side of a pattern:
+
+```
+d1 $ (|=| speed "2") $ sound "arpy*4" |=| speed "1"
+```
+
+In the code above, the left-most effect overrides the original effect
+that was specified on the right. In this case, `speed` will always equal 2.
+
+You can do this conditionally:
+
+```
+d1 $ every 2 (|=| speed "2") $ sound "arpy*4" |=| speed "1"
+```
+
+There are other types of operators that allow you to perform arithmetic:
+
+```
+|+|
+|-|
+|*|
+|/|
+```
+
+For example, using `|+|` will perform an _addition_ operation and _add_ to
+an original value:
+
+```
+d1 $ every 2 (|+| speed "1") $ sound "arpy*4" |=| speed "1"
+```
+
+> The code above results in a speed of "2" every other cycle.
+
+The following will multiply values:
+
+```
+d1 $ every 2 (|*| speed "1.5") $ sound "arpy*4" |=| speed "1"
+```
+
+More complex patterns and chaining can be done, and with any effect, of course:
+
+```
+d1 $ every 3 (|-| up "3") $ every 2 (|+| up "5") $ sound "arpy*4" |=| up "0 2 4 5"
+```
+
+
 ### Some Common Effects
 
 Here is a quick list of some effects you can use in Tidal (the full list is
@@ -416,14 +473,90 @@ Because `run` returns a pattern, you can apply functions to its result:
 d1 $ sound "arpy*8" # up (every 2 (rev) $ run 8)
 ```
 
-For a more practical example of using `run`, read below about automatically
+For a more practical example of using `run`, read below about
 selecting samples from folders.
 
-## (Automatically) Selecting Samples from Folders
+## (Algorithmically) Selecting Samples from Folders
+
+Perhaps one of Tidal's biggest strengths is that it can select samples from
+Dirt folders based on an algorithm. There is a special function called `samples`
+that combines a pattern of samples with a pattern of sample indexes from a folder:
+
+```
+d1 $ sound $ samples "drum*4" "0 1 2 3"
+
+-- the code above equals this:
+d1 $ sound "drum:0 drum:1 drum:2 drum:3"
+```
+
+This allows us to separate the sample folder name from the index inside the
+folder, possibly with surprising results!
+
+Remember the `run` function? Since `run` generates a pattern of integers, it
+can be used with `samples` to automatically "run" through the sample indices
+of a folder:
+
+```
+d1 $ sound $ samples "drum*4" (run 4)
+```
+
+And of course you can specify a different pattern of sample names:
+
+```
+d1 $ sound $ samples "drum arpy cp hh" (run 10)
+```
+
+> NOTE: if you specify a run value that is greater than the number of
+> samples in a folder, then the higher number index will "wrap" to the
+> beginning of the samples in the folder (just like with the colon notation).
+
+You might sometimes see the samples function wrapped in parenthesis:
 
 
+```
+d1 $ sound (samples "drum arpy cp hh" (run 10))
+```
 
-## Combining Different Patterns Together
+
+## Combining Different Types of Patterns Together
+
+Ok, remember when we started adding effects:
+
+```
+d1 $ sound "bd sn drum arpy" |=| pan "0 1 0.25 0.75"
+```
+
+What we're actually doing in the code above is
+_combining two patterns together_: the `sound` pattern, and the `pan` pattern.
+The special pipe operators (`|=|, |+|, |-|, |*|, |/|`), allow us to combine
+two patterns.
+
+Using the code above, we can actually swap sides and it sounds the same:
+
+```
+d1 $ pan "0 1 0.25 0.75" |=| sound "bd sn drum arpy"
+```
+
+The main thing to know when combining patterns like this is that the left-most
+pattern determines the rhythm. Removing one of the elements from the `pan`
+pattern on the left results in a cycle with three samples played:
+
+```
+d1 $ pan "0 1 0.25" |=| sound "bd sn drum arpy"
+```
+
+In the code above, the `pan` pattern determines the rhythm because it is the
+left-most pattern. The `sound` pattern now only determines what samples are
+played at what time. The sound pattern gets _mapped_ onto the pan pattern.
+
+This allows us to do some unique things:
+
+```
+d1 $ up "0 0*2 0*4 1" |=| sound "[arpy, bass2, bd]"
+```
+
+Above, `sound` is merely just specifying three samples to play on each note.
+The note rhythm is defined by `up`, while also specifying pitches.
 
 ## Oscillation with Continuous Patterns
 
