@@ -1,7 +1,14 @@
 > NOTE to Tidal documentation contributors:
-> This is a rough outline and idea for an updated version to the "Creating Patterns"
+> This is a draft update to the "Creating Patterns"
 > section of the existing tidal.lurk.org site. e.g. this is the guide that
-> newer folks will use to learn Tidal.
+> nearly all new users will use to learn Tidal.
+>
+> This newer draft was created after receiving feedback from new users about
+> not knowing that many basic live coding and performance possibilities
+> existed with Tidal. The draft is meant to read like a book, chapter by chapter
+> (or section by section in this case).
+>
+> This content will need to be ported to Jekyll chapter format if used.
 
 # Tidal: the guide
 
