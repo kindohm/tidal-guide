@@ -654,12 +654,120 @@ d1 $ sound "{arpy bass2 drum notes can}%4"
 d1 $ sound "{~ ~ ~ ~, arpy bass2 drum notes can}"
 ```
 
+If "polymeter" sounds a bit confusing, there's a good explanation here:
+http://music.stackexchange.com/questions/10488/polymeter-vs-polyrhythm
 
 ## Shifting Time Backwards and Forwards
 
+You can use the `<~` and `~>` functions to shift time to the left and right.
+With each of these functions, you can specify an amount, in cycle units.
+
+```
+d1 $ (0.25 <~) $ sound "bd*2 cp*2 hh sn"
+d1 $ (0.25 ~>) $ sound "bd*2 cp*2 hh sn"
+```
+
+The above code shifts the patterns over by 0.25 cycles.
+
+However, it's easier (and more practical?) to hear the shifting effect when
+applying it conditionally every few cycles:
+
+```
+d1 $ every 3 (0.25 <~) $ sound "bd*2 cp*2 hh sn"
+d1 $ every 3 (0.25 ~>) $ sound "bd*2 cp*2 hh sn"
+```
+
+You can shift patterns as little or as much as you'd like:
+
+```
+d1 $ every 3 (0.0625 <~) $ sound "bd*2 cp*2 hh sn"
+d1 $ every 3 (1000 ~>) $ sound "bd*2 cp*2 hh sn"
+d1 $ every 3 (1000.125 ~>) $ sound "bd*2 cp*2 hh sn"
+```
+
 ## Introducing Randomness
 
-## Creating Variation In Patterns
+Tidal can produce random patterns of integers and decimals. It can also
+introduce randomness into patterns by removing random events.
+
+### Random Decimal Patterns
+
+Use the `rand` function to create a random value between 0 and 1 (useful for
+effects):
+
+`d1 $ sound "arpy*4" # pan (rand)`
+
+Similar to `run`, `rand` can also be scaled:
+
+`d1 $ sound "arpy*4" # pan (scale 0.25 0.75 $ rand)`
+
+### Random Integer Patterns
+
+Use the `irand` function to create a random integer up to a given maximum.
+Perhaps the most common usage of `irand` is to produce a random pattern of
+sample indices (similar to `run`):
+
+`d1 $ sound $ samples "arpy*8" (irand 30)`
+
+> The code above randomly chooses from 30 samples in the "arpy" folder.
+
+### Removing or "Degrading" Pattern events
+
+Tidal has a few ways to randomly remove events from patterns. You can use the
+shorthand `?` symbol if you want to give an event a 50/50 chance of happening
+or not on every cycle:
+
+`d1 $ sound "bd?"`
+
+In the code above, the "bd" sample has a 50% chance of being played on every
+cycle.
+
+You can add the `?` after the completion of any event or group in a pattern:
+
+```
+d1 $ sound "bd*16?"
+d1 $ sound "bd sn? cp hh?"
+d1 $ sound "[bd sn cp hh]?"
+```
+
+The `?` symbol is shorthand for the `degrade` function. The two lines below
+are equivalent:
+
+```
+d1 $ sound "bd*16?"
+d1 $ degrade $ sound "bd*16"
+```
+
+Related to `degrade` is the `degradeBy` function, where you can specify the
+probability (from 0 to 1) that events will be removed from a pattern:
+
+```
+d1 $ degradeBy 0.25 $ sound "bd*16"
+```
+
+There is also `sometimesBy`, which executes a function based on a probability:
+
+```
+d1 $ sometimesBy 0.75 (slow 2) $ sound "bd*16"
+```
+
+The code above has a 75% chance of calling `slow 2` on every event in the
+pattern.
+
+There are other aliases for `sometimesBy`:
+
+```
+sometimes = sometimesBy 0.5
+often = sometimesBy 0.75
+rarely = sometimesBy 0.25
+almostNever = sometimesBy 0.1
+almostAlways = sometimesBy 0.9
+
+d1 $ sometimes (density 2) $ sound "bd*8"
+d1 $ rarely (density 2) $ sound "bd*8"
+```
+
+## Creating More Variation In Patterns
 
 ## Creating "Fills"
 
