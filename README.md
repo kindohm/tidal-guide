@@ -401,9 +401,27 @@ bps (100/120)
 
 ## The Run function
 
+There is a special utility function called `run` which will return a pattern of
+integers up to a specified maximum. You can use `run` with effects to aid in
+automatically generating a linear pattern:
 
+```
+d1 $ sound "arpy*8" # up (run 8)
+d1 $ sound "arpy*8" # speed (run 8)
+```
+
+Because `run` returns a pattern, you can apply functions to its result:
+
+```
+d1 $ sound "arpy*8" # up (every 2 (rev) $ run 8)
+```
+
+For a more practical example of using `run`, read below about automatically
+selecting samples from folders.
 
 ## (Automatically) Selecting Samples from Folders
+
+
 
 ## Combining Different Patterns Together
 
