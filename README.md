@@ -94,7 +94,7 @@ patterns:
 
 `d1 $ sound "[bd bd] [bd [sn [sn sn] sn] sn]"`
 
-### Layering Instead of Grouping
+### Layering (Polyrhythms) Instead of Grouping
 
 You can also layer up several loops, by using commas to separate the different parts:
 
@@ -105,7 +105,7 @@ Note that the first sequence only has three events, and the second one has four.
 Because tidal ensures both loops fit inside same duration, you end up with
 a polyrhythm.
 
-You can layer any number of patterns:
+You can layer any number of patterns to create many polyrhythms:
 
 `d1 $ sound "[bd bd bd, sn cp sn cp, arpy arpy, odx]"`
 
@@ -613,9 +613,49 @@ d1 $ sound "hh*32" # cutoff (scale 0.001 0.1 $ slow 4 $ sine1) # resonance "0.1"
 
 ## Rests
 
-## Polyrhythms
+So far we have produced patterns that keep producing more and more sound. What
+if you want a rest, or gap of silence, in your pattern? You can use the "tilde"
+`~` character to do so:
 
-## Shifting Time
+```
+d1 $ sound "bd bd ~ bd"
+```
+
+Think of the `~` as a special sample name that produces silence.
+
+## Polymeters
+
+We talked about _polyrhythms_ earlier, but Tidal can also produce
+_polymeter_ sequences. A polymeter pattern is one where two patterns
+have different sequence lengths, but share the same pulse or tempo.
+
+You use curly brace syntax in Tidal to create a polymeter rhythm:
+
+`d1 $ sound "{bd hh sn cp, arpy bass2 drum notes can}"`
+
+The code above results in a five-note rhythm being played at the pulse of
+a four-note rhythm. If you switch the groups around, it results in a
+four-note rhythm over a five-note rhythm:
+
+`d1 $ sound "{arpy bass2 drum notes can, bd hh sn cp}"`
+
+Sometimes you might want to create an odd polymeter rhythm without having to
+explicitly create a base rhythm. You _could_ do this with rests:
+
+`d1 $ sound "{~ ~ ~ ~, arpy bass2 drum notes can}"`
+
+But a more efficient way is to use the `%` symbol after the closing curly
+brace to specify the number of notes in the base pulse:
+
+```
+d1 $ sound "{arpy bass2 drum notes can}%4"
+
+-- the above is the same as this:
+d1 $ sound "{~ ~ ~ ~, arpy bass2 drum notes can}"
+```
+
+
+## Shifting Time Backwards and Forwards
 
 ## Introducing Randomness
 
