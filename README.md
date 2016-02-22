@@ -13,12 +13,11 @@
 # Tidal: the guide
 
 You've installed Dirt and Tidal, maybe even made a few sounds, but now you're
-ready to get to business and really learn Tidal. This guide is for beginners
-who are learning Tidal. It will help you get started with simple patterns
+ready to get to business and start really learning Tidal. This guide will help you get started with simple patterns
 and walk you through all the way to complex compositions.
 
 > NOTE: please _play_ with the code as you read. Run your own experiments
-> by making slight modification to these samples!
+> by making slight modification to these examples!
 
 
 ## Creating Rhythmic Sequences
@@ -26,18 +25,18 @@ and walk you through all the way to complex compositions.
 ### Play a Single Sample
 
 Tidal starts with nine connections to the dirt synthesiser, named from d1 to d9.
-Here's a minimal example, that plays a bass drum every loop:
+Here's a minimal example, that plays a bass drum every cycle:
 
 `d1 $ sound "bd"`
 
-In the code above, sound tells us we're making a pattern of sound samples, and
-"bd" is a pattern that contains a single sound. bd is a sample of a bass drum.
-Samples live inside the /samples folder which came with the Dirt code, and
-each sub-folder under /samples corresponds to a sample name (like "bd").
+In the code above, `sound` tells us we're making a pattern of sound samples, and
+`"bd"` is a pattern that contains a single sound. `bd` is a sample of a bass drum.
+Samples live inside the `/samples` folder which came with Dirt, and
+each sub-folder under `/samples` corresponds to a sample name (like `bd`).
 
-We can pick a different sample in the "bd" folder by adding a colon (:) then
-a number. For example this picks the fourth bass drum (it counts from 0,
-so :3 gives you the fourth sound in the folder):
+We can pick a different sample in the `bd` folder by adding a colon (`:`) then
+a number. For example this picks the fourth bass drum (it counts from zero,
+so `:3` gives you the fourth sound in the folder):
 
 `d1 $ sound "bd:3"`
 
