@@ -364,10 +364,44 @@ complex pattern, although the results are a little difficult to describe:
 d1 $ e 3 8 $ sound "bd*2 [sn cp]"
 ```
 
-
 ## Setting Tempo
 
+If you've made it this far without changing the tempo in all these examples,
+then you're probably ready to change it up.
+
+Tidal's core unit of time is cycles per second. It can be set with the
+`cps` function:
+
+```
+cps 1
+```
+
+You can execute `cps` just like a pattern (using Shift+Enter in your editor).
+
+`cps` accepts a positive numeric value that can include a decimal:
+
+```
+cps 1.5
+cps 0.75
+cps 10
+```
+
+### Setting BPM
+
+Tidal also includes a helper function called `bps` to set "beats per second".
+To set beats-per-minute, call `bps` with your bpm value, divided by 120:
+
+```
+-- sets a tempo of 170 BPM:
+bps (170/120)
+
+-- sets a tempo of 100 BPM:
+bps (100/120)
+```
+
 ## The Run function
+
+
 
 ## (Automatically) Selecting Samples from Folders
 
