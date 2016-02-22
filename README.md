@@ -155,7 +155,129 @@ d1 $ sound "[bd [sn sn]*2]/2 [bd [sn bd]/2]*2"
 
 ## Modifying Sequences With Functions
 
-## Changing the Sounds of your Samples
+Tidal comes into its own when you start building things up with functions which
+transform the patterns in various ways.
+
+For example, rev reverses a pattern:
+
+```
+d1 $ rev (sound "[bd bd] [bd [sn [sn sn] sn] sn]")
+```
+
+That's not so exciting, but things get more interesting when this is used in
+combination with another function. For example every takes two parameters, a
+number, a function and a pattern to apply the function to. The number specifies
+how often the function is applied to the pattern. For example, the following
+reverses the pattern every fourth repetition:
+
+```
+d1 $ every 4 (rev) (sound "bd*2 [bd [sn sn*2 sn] sn]")
+```
+
+You can also slow down or speed up the playback of a pattern, this makes it a
+quarter of the speed:
+
+```
+d1 $ slow 4 $ sound "bd*2 [bd [sn sn*2 sn] sn]"
+```
+
+And this four times the speed:
+
+```
+d1 $ density 4 $ sound "bd*2 [bd [sn sn*2 sn] sn]"
+```
+
+Note that slow 0.25 would do exactly the same as density 4.
+
+Again, this can be applied selectively:
+
+```
+d1 $ every 4 (density 4) $ sound "bd*2 [bd [sn sn*2 sn] sn]"
+```
+
+Note the use of parenthesis around (density 4), this is needed, to group
+together the function `density` with its parameter 4, before being passed as a
+parameter to the function `every`.
+
+Instead of putting transformations up front, separated by the pattern by the $
+symbol, you can put them inside the pattern, for example:
+
+```
+d1 $ sound (every 4 (density 4) "bd*2 [bd [sn sn*2 sn] sn]")
+```
+
+### Where are all the functions?
+
+There are many types of functions that help you change patterns. Some of them
+re-order sequences, some alter time, some provide conditional logic, and some
+can help compose more complex patterns.
+
+All of the functions available in Tidal can be found on the Reference page.
+
+## Changing Sounds with Effects
+
+Tidal has a number of effects that you can apply to sounds. Some of them do
+simple things like change volume, and others do more complex things like
+change sample rate or add delay.
+
+You use an effect by adding the `#` operator between your sound pattern and
+the effect:
+
+```
+d1 $ sound "bd*4" # gain "0.5"
+```
+
+The above code decreases the volume of the "bd" sample by 50%.
+
+You can chain multiple effects together, separating them again with the `#`
+operator:
+
+```
+d1 $ sound "bd*4" # gain "0.5" # delay "0.5"
+```
+
+The code above decreases the volume by 50% and also applies a "delay" effect
+at a level of 0.5.
+
+### Effects are patterns too
+
+You may notice that the values of effects are specified in double quotes. This
+means that you can put a pattern of effect values inside the quotes:
+
+```
+d1 $ sound "bd*4" # gain "1 0.8 0.5 0.7"
+```
+
+Effect patterns follow all the same grouping rules as sound patterns:
+
+```
+d1 $ sound "bd*4 sn*4" # gain "[[1 0.8]*2 [0.5 0.7]]/2"
+```
+
+And you can also apply functions to effect patterns:
+
+```
+d1 $ sound "bd*4" # gain (every 3 (rev) $ "1 0.8 0.5 0.7")
+```
+
+> Like with the `sound` example earlier, you must use parenthesis after `gain`
+> in order to specify a function on the `gain` pattern.
+
+### Some Common Effects
+
+Here is a quick list of some effects you can use in Tidal (the full list is
+available in the Reference section):
+
+- gain (changes volume, values from 0 to 1)
+- pan (pans sound right and left, values from 0 to 1)
+- shape (a type of amplifier, values from 0 to 1)
+- vowel (a vowel formant filter, values include a, e, i, o, and u)
+- speed (changes playback speed of a sample, see below)
+
+## Changing Sample Playback Speed
+
+
+## Euclidean Sequences
 
 ## Setting Tempo
 
