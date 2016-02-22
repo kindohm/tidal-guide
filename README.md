@@ -279,7 +279,7 @@ available in the Reference section):
 - vowel (a vowel formant filter, values include a, e, i, o, and u)
 - speed (changes playback speed of a sample, see below)
 
-## Changing Sample Playback Speed
+## Changing Sample Playback Speed (and Pitch)
 
 You can change the playback speed of a sample in Tidal using the `speed` effect.
 You can use `speed` to change pitches, to create a weird effect, or to match
@@ -335,6 +335,36 @@ d1 $ sound "arpy*12" # up "0 1 2 3 4 5 6 7 8 9 10 11"
 
 ## Euclidean Sequences
 
+If you give two numbers in parenthesis after an element in a pattern, then Tidal
+will distribute the first number of sounds equally across the second number of
+steps:
+
+```
+d1 $ sound "bd(5,8)"
+```
+
+You can also use the `e` function to do this. `e` takes the same two arguments
+as what is used in the parenthesis above:
+
+```
+d1 $ e 5 8 $ sound "bd"
+```
+
+You can use the parenthesis notation within a single element of a pattern:
+
+```
+d1 $ sound "bd(3,8) sn*2"
+d1 $ sound "bd(3,8) sn(5,8)"
+```
+
+You can also use the `e` function to apply a Euclidean algorithm over a
+complex pattern, although the results are a little difficult to describe:
+
+```
+d1 $ e 3 8 $ sound "bd*2 [sn cp]"
+```
+
+
 ## Setting Tempo
 
 ## The Run function
@@ -364,3 +394,5 @@ d1 $ sound "arpy*12" # up "0 1 2 3 4 5 6 7 8 9 10 11"
 ## Transitions To New Patterns
 
 ## Solos
+
+## Lambdas
