@@ -1,4 +1,9 @@
-# Tidal
+> NOTE to Tidal documentation contributors:
+> This is a rough outline and idea for an updated version to the "Creating Patterns"
+> section of the existing tidal.lurk.org site. e.g. this is the guide that
+> newer folks will use to learn Tidal.
+
+# Tidal: the guide
 
 You've installed Dirt and Tidal, maybe even made a few sounds, but now you're
 ready to get to business and really learn Tidal. This guide is for beginners
