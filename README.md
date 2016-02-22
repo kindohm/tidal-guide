@@ -791,9 +791,97 @@ in reverse for two, and so on:
 d1 $ whenmod 8 6 (rev) $ sound "bd*2 arpy*2 cp hh*22"
 ```
 
-## Creating "Fills"
+## Creating "Fills" and replacing patterns with const
+
+You can think of a "fill" as a change to a regular pattern that happens
+regularly. e.g. every 4 cycles do "xya", or every 8 cycles do "abc".
+
+We've already been using `every` and `whenmod` to do pattern function fills:
+
+```
+d1 $ every 8 (rev) $ every 4 (density 2) $ sound "bd hh sn cp"
+d1 $ whenmod 16 14 (# speed "2") $ sound "bd arpy*2 cp bass2"
+```
+
+However, what if you wanted to conditionally replace the pattern with a new one?
+You can use the `const` function to completely replace a playing pattern.
+
+Let's start with a trivial example where we use `const` to replace an entire
+pattern all the time:
+
+`d1 $ const (sound "arpy*3") $ sound "bd sn cp hh"`
+
+In the code above, we've completely replaced the "bd sn cp hh" pattern with
+an "arpy" pattern. `const` specifies the new pattern.
+
+We can conditionally apply `const` using `every` or `whenmod`:
+
+```
+d1 $ whenmod 8 6 (const $ sound "arpy(3,8) bd*4") $ sound "bd sn bass2 sn"
+d1 $ every 12 (const $ sound "bd*4 sn*2") $ sound "bd sn bass2 sn"
+```
 
 ## Composing Multi-Part Patterns
+
+There are a few ways that you can compose new patterns from multiple other
+patterns. You can concatenate or "append" patterns in serial, or you can
+"stack" them and play them together in parallel.
+
+### Concatenating patterns in serial
+
+You can use the `cat` function to add patterns one after another:
+
+```
+d1 $ cat [sound "bd sn:2" # vowel "[a o]/2",
+          sound "casio casio:1 casio:2*2"
+         ]
+```
+
+The `cat` function squeezes all the patterns into the space of one.
+The more patterns you add to the list, the faster each pattern will be played so
+that all patterns can fit into a single cycle.
+
+```
+d1 $ cat [sound "bd sn:2" # vowel "[a o]/2",
+          sound "casio casio:1 casio:2*2",
+          sound "drum drum:2 drum:3 drum:4*2"
+         ]
+```
+
+`slowcat` will maintain the original playback speed of the patterns:
+
+```
+d1 $ slowcat [sound "bd sn:2" # vowel "[a o]/2",
+              sound "casio casio:1 casio:2*2",
+              sound "drum drum:2 drum:3 drum:4*2"
+             ]
+```
+
+`slowcat` is a great way to create a linear sequence of patterns (a sequence
+of sequences), giving a larger form to multiple patterns.
+
+### Playing patterns together in parallel
+
+The `stack` function takes a list of patterns and combines them into a new
+pattern by playing all of the patterns in the list simultaneously.
+
+```
+d1 $ stack [
+  sound "bd bd*2",
+  sound "hh*2 [sn cp] cp future*4",
+  sound (samples "arpy*8" (run 16))
+]
+```
+
+This is useful if you want to apply functions or effects on the entire stack:
+
+```
+d1 $ every 4 (slow 2) $ whenmod 5 3 (# speed "0.75 1.5") $ stack [
+  sound "bd bd*2",
+  sound "hh*2 [sn cp] cp future*4",
+  sound (samples "arpy*8" (run 16))
+] # speed "[[1 0.8], [1.5 2]*2]/3"
+```
 
 ## Truncating Samples with "cut"
 
