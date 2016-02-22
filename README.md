@@ -860,6 +860,8 @@ d1 $ slowcat [sound "bd sn:2" # vowel "[a o]/2",
 `slowcat` is a great way to create a linear sequence of patterns (a sequence
 of sequences), giving a larger form to multiple patterns.
 
+There's also `randcat', which will play a random pattern from the list.
+
 ### Playing patterns together in parallel
 
 The `stack` function takes a list of patterns and combines them into a new
@@ -885,7 +887,63 @@ d1 $ every 4 (slow 2) $ whenmod 5 3 (# speed "0.75 1.5") $ stack [
 
 ## Truncating Samples with "cut"
 
+So far, all of our examples have used short samples. However, maybe you've
+experimented with some long samples. Maybe you've noticed that really long
+samples can cause a lot of bleed and unwanted sound.
+
+With Tidal's `cut` effect, you can "choke" a sound and stop it from playing
+when a new sample is triggered.
+
+Consider the following example where we have a pattern of "arpy" sounds,
+played at a low speed, so there is a lot of bleed into each sample:
+
+`d1 $ sound $ samples "arpy*8" (run 8) # speed "0.25"`
+
+We can stop this bleed by using `cut` and assigning the pattern a cut group of
+"1":
+
+`d1 $ sound $ samples "arpy*8" (run 8) # speed "0.25" # cut "1"`
+
+No more bleed!
+
+You can use any number for the cut group.
+
+Cut groups are global, to the Tidal process, so if you have two Dirt connections,
+use two different cut group values to make sure the patterns don't choke
+each other:
+
+```
+d1 $ sound $ samples "arpy*8" (run 8) # speed "0.25" # cut "1"
+d2 $ sound $ samples "bass2*6" (run 6) # speed "0.5" # cut "2"
+```
+
+This also works in a `stack`:
+
+```
+d1 $ stack [
+   sound $ samples "arpy*8" (run 8) # speed "0.25" # cut "1",
+   sound $ samples "bass2*6" (run 6) # speed "0.5" # cut "2" ]
+```
+
 ## Transitions To New Patterns
+
+Changing the pattern on a channel takes effect (almost) immediately. This may not be what you want, especially when performing live!
+
+That's why Tidal allows you to choose a transition that will introduce another pattern, eventually replacing the current one.
+
+For every channel, there's a transition channel that accepts a transition function and a new pattern.
+
+So instead of directly sending the new pattern to d1, we'll send it to the corresponding transition channel t1 and give it a nice transition function:
+
+d1 $ sound (samples "hc*8" (iter 4 $ run 4))
+
+t1 anticipate $ sound (samples "bd(3,8)" (run 3))
+To transition from here, simply change the pattern within t1, and in this case also change the transition function:
+
+t1 (xfadeIn 16) $ sound "bd(5,8)"
+The above will fade over 16 cycles from the former pattern to the given new one.
+
+Apart from anticipate and xfadeIn there are a lot more transition functions e.g. some that will force you to keep changing your patterns to avoid repetitive performances…
 
 ## Solos
 
